@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart'; 
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled5/all/color.dart';
 import 'package:untitled5/all/map.dart';
@@ -15,24 +15,21 @@ class ViolationsScreen extends StatefulWidget {
 }
 
 class _ViolationsScreenState extends State<ViolationsScreen> {
-  // 1. نقل المتغيرات داخل الـ State لضمان استقرارها
   List<Map<String, dynamic>> flter = [];
   final TextEditingController fromDateCtrl = TextEditingController();
   final TextEditingController toDateCtrl = TextEditingController();
   final TextEditingController plateCtrl = TextEditingController();
-  
+
   bool from = true;
 
   @override
   void initState() {
     super.initState();
-    // تهيئة البيانات بناءً على المستخدم الحالي
     flter = data
         .where((item) => item.containsKey('idu') && item['idu'] == widget.idu)
         .toList();
   }
 
-  // تنظيف الـ Controllers عند إغلاق الصفحة لمنع تسريب الذاكرة
   @override
   void dispose() {
     fromDateCtrl.dispose();
@@ -46,35 +43,35 @@ class _ViolationsScreenState extends State<ViolationsScreen> {
     toDateCtrl.clear();
     fromDateCtrl.clear();
     setState(() {
-      flter = data
-          .where((item) => item['idu'] == widget.idu)
-          .toList();
+      flter = data.where((item) => item['idu'] == widget.idu).toList();
     });
   }
 
   DateTime parseDate(String date) {
     try {
       String normalizedDate = date.replaceAll('/', '-');
-      // محاولة التحليل بتنسيق السنة-الشهر-اليوم
       return DateFormat('yyyy-M-d').parse(normalizedDate);
     } catch (e) {
-      return DateTime.now(); 
+      return DateTime.now();
     }
   }
 
   void search(String value) {
     String plateQuery = plateCtrl.text.trim().toLowerCase();
-    DateTime? fromDate = fromDateCtrl.text.isNotEmpty ? parseDate(fromDateCtrl.text) : null;
-    DateTime? toDate = toDateCtrl.text.isNotEmpty ? parseDate(toDateCtrl.text) : null;
+    DateTime? fromDate = fromDateCtrl.text.isNotEmpty
+        ? parseDate(fromDateCtrl.text)
+        : null;
+    DateTime? toDate = toDateCtrl.text.isNotEmpty
+        ? parseDate(toDateCtrl.text)
+        : null;
 
     setState(() {
       flter = data.where((item) {
-        // حماية من القيم الفارغة (Null Safety)
         String itemPlate = item['desc']?.toString().toLowerCase() ?? '';
         String itemDateStr = item['date']?.toString() ?? '';
-        
+
         bool plateMatch = plateQuery.isEmpty || itemPlate.contains(plateQuery);
-        
+
         DateTime itemDate = parseDate(itemDateStr);
         bool dateMatch = true;
 
@@ -104,9 +101,18 @@ class _ViolationsScreenState extends State<ViolationsScreen> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text("إلغاء", style: TextStyle(color: Acolor.body)),
+                      child: Text(
+                        "إلغاء",
+                        style: TextStyle(color: Acolor.body),
+                      ),
                     ),
-                    Text("اختر التاريخ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.amber)),
+                    Text(
+                      "اختر التاريخ",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                      ),
+                    ),
                     TextButton(
                       onPressed: () => Navigator.pop(context),
                       child: Text("تم", style: TextStyle(color: Acolor.body)),
@@ -120,8 +126,10 @@ class _ViolationsScreenState extends State<ViolationsScreen> {
                   initialDateTime: DateTime.now(),
                   onDateTimeChanged: (DateTime newDate) {
                     setState(() {
-                      controller.text = DateFormat('yyyy-MM-dd').format(newDate);
-                      search(""); // تحديث البحث فوراً
+                      controller.text = DateFormat(
+                        'yyyy-MM-dd',
+                      ).format(newDate);
+                      search(""); 
                     });
                   },
                 ),
@@ -139,14 +147,19 @@ class _ViolationsScreenState extends State<ViolationsScreen> {
       backgroundColor: Acolor.body,
       appBar: AppBar(
         backgroundColor: Acolor.AppBar,
-        title: Text('المخالفات المسجلة',
-          style: TextStyle(color: Colors.amber, fontFamily: 'MyCustomFont', fontWeight: FontWeight.w500)),
+        title: Text(
+          'المخالفات المسجلة',
+          style: TextStyle(
+            color: Colors.amber,
+            fontFamily: 'MyCustomFont',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(12),
         child: Column(
           children: [
-            // قسم الفلترة بالتاريخ
             Row(
               children: [
                 Expanded(child: dateField(fromDateCtrl, 'من')),
@@ -155,7 +168,6 @@ class _ViolationsScreenState extends State<ViolationsScreen> {
               ],
             ),
             SizedBox(height: 10),
-            // حقل البحث برقم اللوحة
             TextField(
               controller: plateCtrl,
               onChanged: search,
@@ -164,59 +176,86 @@ class _ViolationsScreenState extends State<ViolationsScreen> {
                 prefixIcon: Icon(Icons.search),
                 filled: true,
                 fillColor: Colors.grey.shade200,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
             ),
             SizedBox(height: 20),
-            // عرض الجدول
-          Expanded(
-  child: flter.isEmpty
-      ? const Center(child: Text("لا توجد بيانات تطابق البحث"))
-      : SingleChildScrollView(
-          scrollDirection: Axis.vertical, // التمرير للأسفل
-          child: FittedBox(
-            fit: BoxFit.fitWidth, // جعل عرض الجدول يطابق عرض الشاشة
-            child: DataTable(
-              columnSpacing: 20,
-              dataRowMaxHeight: double.infinity, // هذا ما سيسمح للنص بالنزول للأسفل وتوسيع الصف
-              dataRowMinHeight: 60,
-              border: TableBorder.all(color: Colors.grey.shade400),
-              columns: const [
-                DataColumn(label: Text('ID',style: TextStyle(  fontWeight: FontWeight.w700),)),
-                DataColumn(label: Text('اللوحة',style: TextStyle(  fontWeight: FontWeight.w700))),
-                DataColumn(label: Text('المخالفات',style: TextStyle(  fontWeight: FontWeight.w700))),
-                DataColumn(label: Text('النوع',style: TextStyle(  fontWeight: FontWeight.w700))),
-                                DataColumn(label: Text('التاريخ',style: TextStyle(  fontWeight: FontWeight.w700))),
-
-              ],
-              rows: flter.map((item) {
-                return DataRow(
-                  cells: [
-                    DataCell(Text(item['id']?.toString() ?? '')),
-                    DataCell(Text(item['desc']?.toString() ?? '')),
-                    DataCell(
-                      // الحاوية هنا هي السر
-                      Container(
-                        width: 140, // يجب تحديد عرض ثابت هنا ليجبر FittedBox النص على النزول لأسفل
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          item['val1']?.toString() ?? '',
-                          style: const TextStyle(fontSize: 12),
-                          softWrap: true, // تفعيل التفاف النص
-                          overflow: TextOverflow.visible,
+            Expanded(
+              child: flter.isEmpty
+                  ? const Center(child: Text("لا توجد بيانات تطابق البحث"))
+                  : SingleChildScrollView(
+                      scrollDirection: Axis.vertical, 
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: DataTable(
+                          columnSpacing: 20,
+                          dataRowMaxHeight: double
+                              .infinity, 
+                          dataRowMinHeight: 60,
+                          border: TableBorder.all(color: Colors.grey.shade400),
+                          columns: const [
+                            DataColumn(
+                              label: Text(
+                                'ID',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'اللوحة',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'المخالفات',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'النوع',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'التاريخ',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ],
+                          rows: flter.map((item) {
+                            return DataRow(
+                              cells: [
+                                DataCell(Text(item['id']?.toString() ?? '')),
+                                DataCell(Text(item['desc']?.toString() ?? '')),
+                                DataCell(
+                                  Container(
+                                    width:
+                                        140,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    child: Text(
+                                      item['val1']?.toString() ?? '',
+                                      style: const TextStyle(fontSize: 12),
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(Text(item['val3']?.toString() ?? '')),
+                                DataCell(Text(item['date']?.toString() ?? '')),
+                              ],
+                            );
+                          }).toList(),
                         ),
                       ),
                     ),
-                    DataCell(Text(item['val3']?.toString() ?? '')),
-                                        DataCell(Text(item['date']?.toString() ?? '')),
-
-                  ],
-                );
-              }).toList(),
             ),
-          ),
-        ),
-)
           ],
         ),
       ),
@@ -230,7 +269,6 @@ class _ViolationsScreenState extends State<ViolationsScreen> {
     );
   }
 
-  // ويدجت مساعد لحقول التاريخ لتقليل تكرار الكود
   Widget dateField(TextEditingController ctrl, String label) {
     return TextField(
       controller: ctrl,
