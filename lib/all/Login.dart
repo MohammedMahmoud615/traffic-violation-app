@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // المكتبة المطلوبة
-import 'package:untitled5/all/color.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled5/all/list.dart';
 import 'package:untitled5/all/map.dart';
 
