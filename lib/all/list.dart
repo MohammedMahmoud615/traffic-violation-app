@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// تأكد من أن TrafficViolationForm هو الكلاس الموجود في ملف 1.dart
 import 'package:untitled5/1.dart';
 import 'package:untitled5/all/Records.dart';
 import 'package:untitled5/all/color.dart'; 
@@ -19,7 +18,6 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  // اجعل القيمة الافتراضية 0 لتبدأ من صفحة "تسجيل مخالفة"
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
@@ -44,7 +42,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // استخدام Directionality لضمان دعم اللغة العربية في كامل الشاشة
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: PageView(
@@ -55,10 +52,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             });
           },
           children: [
-            // الصفحة الأولى: نموذج تسجيل المخالفة (تأكد من اسم الكلاس في ملف 1.dart)
             TrafficViolationForm(idu: widget.idu,nameu: widget.nameu,), 
             Records(idu: widget.idu,nameu: widget.nameu,),
-            // الصفحة الثانية: عرض المخالفات المسجلة
             ViolationsScreen(idu: widget.idu,nameu: widget.nameu, ),
 
 
@@ -77,7 +72,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   fontWeight: FontWeight.w700,),
         items: [
 BottomNavigationBarItem(
-            icon: Icon(Icons.add_a_photo_rounded), // أيقونة أنسب للكاميرا والتسجيل
+            icon: Icon(Icons.add_a_photo_rounded), 
             label: "تسجيل مخالفة",
             
           ),
