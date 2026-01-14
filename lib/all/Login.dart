@@ -21,11 +21,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    // التحقق عند فتح الصفحة: هل المستخدم مسجل دخول مسبقاً؟
     _checkSavedLogin();
   }
 
-  // دالة الفحص التلقائي (مثل قراءة الكوكيز)
   Future<void> _checkSavedLogin() async {
     final prefs = await SharedPreferences.getInstance();
     final bool? isLoggedIn = prefs.getBool('isLoggedIn');
@@ -33,12 +31,10 @@ class _LoginPageState extends State<LoginPage> {
     final String? savedName = prefs.getString('nameu');
 
     if (isLoggedIn == true && savedId != null && savedName != null) {
-      // إذا وجدنا البيانات، ننتقل فوراً للشاشة الرئيسية
       _navigateToMain(savedId, savedName);
     }
   }
 
-  // دالة الحفظ (مثل إنشاء الكوكيز)
   Future<void> _saveLoginSession(String id, String name) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', true);
@@ -68,10 +64,8 @@ class _LoginPageState extends State<LoginPage> {
         if (name == element['nameu'] && pass == element['pasu']) {
           found = true;
           
-          // 1. حفظ الجلسة محلياً
           await _saveLoginSession(element['idu'], element['nameu']);
           
-          // 2. الانتقال للشاشة الرئيسية
           _navigateToMain(element['idu'], element['nameu']);
           break;
         }
@@ -106,7 +100,6 @@ class _LoginPageState extends State<LoginPage> {
           key: _formKey,
           child: Column(
             children: [
-              // قسم الشعار مع تصميم الـ Header
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 30),
@@ -151,7 +144,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 30),
 
-              // حاوية المدخلات
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 padding: const EdgeInsets.all(25),
