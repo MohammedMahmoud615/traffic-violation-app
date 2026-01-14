@@ -68,5 +68,4 @@ List<String> violations = [
   ' قيادة بطيش وإهمال',
   'يسوق بدون رخصة',
 ];
-
 List<String> selectedViolations = [];
