@@ -46,7 +46,6 @@ class _ViolationsScreenState extends State<ViolationsScreen> {
       flter = data.where((item) => item['idu'] == widget.idu).toList();
     });
   }
-
   DateTime parseDate(String date) {
     try {
       String normalizedDate = date.replaceAll('/', '-');
