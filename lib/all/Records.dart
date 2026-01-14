@@ -3,7 +3,6 @@ import 'package:untitled5/all/color.dart';
 import 'package:untitled5/all/map.dart';
 import 'package:untitled5/all/recocded_viodations.dart';
 
-
 class Records extends StatefulWidget {
   final String idu;
   final String nameu;
@@ -24,7 +23,8 @@ class _RecordsState extends State<Records> {
     super.initState();
     filteredList = List.from(tap);
   }
-void clearFilters() {
+
+  void clearFilters() {
     if (tap.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -36,11 +36,11 @@ void clearFilters() {
     }
 
     setState(() {
-      data.addAll(tap); 
-      
-      tap.clear(); 
-      
-      filteredList.clear(); 
+      data.addAll(tap);
+
+      tap.clear();
+
+      filteredList.clear();
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -90,7 +90,6 @@ void clearFilters() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       backgroundColor: Acolor.body,
       appBar: AppBar(
         title: const Text(
@@ -103,10 +102,17 @@ void clearFilters() {
       ),
       body: Column(
         children: [
-
           Expanded(
             child: filteredList.isEmpty
-                ? const Center(child: Text("لم تقم بتسجيل اي مخالفة اليوم",style: TextStyle(fontWeight: FontWeight.w700,color: Color.fromARGB(118, 0, 0, 0)),))
+                ? const Center(
+                    child: Text(
+                      "لم تقم بتسجيل اي مخالفة اليوم",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Color.fromARGB(118, 0, 0, 0),
+                      ),
+                    ),
+                  )
                 : ListView.builder(
                     padding: const EdgeInsets.all(12),
                     itemCount: filteredList.length,
@@ -120,7 +126,10 @@ void clearFilters() {
         backgroundColor: Acolor.AppBar,
         onPressed: clearFilters,
         icon: Icon(Icons.refresh, color: Acolor.body),
-        label: Text('رفع إلي القاعدة', style: TextStyle(color: Acolor.body,fontWeight: FontWeight.w700)),
+        label: Text(
+          'رفع إلي القاعدة',
+          style: TextStyle(color: Acolor.body, fontWeight: FontWeight.w700),
+        ),
       ),
     );
   }
