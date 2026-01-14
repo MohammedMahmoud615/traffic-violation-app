@@ -25,7 +25,6 @@ class _RecordsState extends State<Records> {
     filteredList = List.from(tap);
   }
 void clearFilters() {
-    // نتحقق أولاً إذا كانت القائمة فارغة أصلاً لتجنب الرفع المتكرر
     if (tap.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -51,9 +50,9 @@ void clearFilters() {
           style: TextStyle(fontFamily: 'MyCustomFont'),
         ),
         backgroundColor: Colors.green.shade700,
-        behavior: SnackBarBehavior.floating, // لجعل الرسالة تطفو فوق العناصر
+        behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        duration: const Duration(seconds: 2), // مدة ظهور الرسالة
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -104,9 +103,7 @@ void clearFilters() {
       ),
       body: Column(
         children: [
-          // قسم البحث والفلترة
 
-          // قائمة المخالفات (البطاقات)
           Expanded(
             child: filteredList.isEmpty
                 ? const Center(child: Text("لم تقم بتسجيل اي مخالفة اليوم",style: TextStyle(fontWeight: FontWeight.w700,color: Color.fromARGB(118, 0, 0, 0)),))
@@ -128,7 +125,6 @@ void clearFilters() {
     );
   }
 
-  // ويدجت البطاقة (بديل الجدول)
   Widget _buildViolationCard(Map<String, dynamic> item) {
     return Card(
       elevation: 2,
